@@ -1,11 +1,26 @@
-import express, { Request, Response } from 'express';
+import express from 'express';
+import cors from "cors"
+import routes  from "./router/index.route"
+import { connectDB } from './config/database.config';
+import dotenv from "dotenv"
 
 const app = express();
 const port = 4000;
+// Load biến môi trường 
+dotenv.config();
 
-app.get('/', (req: Request, res: Response) => {
-  res.send('Hello World!');
-});
+// Cấu hình CORS
+app.use(cors({
+  origin: "*", // Có thể điền 1 tên miền cụ thể
+  methods: ["GET", "POST", "PATCH", "DELETE"], // Các phương thức được phép
+  allowedHeaders: ["Content-Type", "Authorization"]
+}));
+// Cho phép gửi lên dạng JSON
+app.use(express.json())
+// Connect database
+connectDB();
+
+app.use('/', routes);
 
 app.listen(port, () => {
   console.log(`Website đang chạy trên cổng ${port}`);
