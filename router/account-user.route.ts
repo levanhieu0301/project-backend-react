@@ -5,4 +5,5 @@ import * as userRegisterValidate from "../validates/account-user.validate"
 
 router.post('/register',userRegisterValidate.registerPost ,userRegisterController.userRegister);
 
+router.post('/login',userRegisterValidate.loginPost ,userRegisterController.userLogin);
 export default router;

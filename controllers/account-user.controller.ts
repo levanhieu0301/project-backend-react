@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import AccountUser from '../models/account-user.model';
 import bcrypt from "bcryptjs"
+import jwt from "jsonwebtoken";
 
 export const userRegister = async (req: Request, res: Response) => {
 const { fullName, email, password } = req.body;
@@ -32,4 +33,55 @@ const { fullName, email, password } = req.body;
     code: "success",
     message: "Đăng ký tài khoản thành công!"
   })
+}
+
+export const userLogin = async (req: Request, res: Response) => {
+  const {email, password} = req.body
+
+  // Kiểm tra xem email có tồn tại không
+  const existAccount = await AccountUser.findOne({
+    email: email
+  });
+
+  if(!existAccount) {
+    res.json({
+      code: "error",
+      message: "Email không tồn tại trong hệ thống!"
+    });
+    return;
+  }
+  
+  // Kiểm tra mật khẩu
+  const isPasswordValid = await bcrypt.compare(password, `${existAccount.password}`);
+  if (!isPasswordValid) {
+    res.json({
+      code: "error",
+      message: "Mật khẩu không đúng!"
+    });
+    return;
+  }
+  // Trả về cho FE token
+  const token = jwt.sign(
+    {
+      id:existAccount.id,
+      email: existAccount.email
+    }, 
+    `${process.env.CODE_SECRET}`, 
+    { 
+      expiresIn: '1d'
+    });
+  // Lưu token vào cookie
+  res.cookie("token", token, {
+    maxAge: 24 * 60 * 60 * 1000, // Token có hiệu lực trong 1 ngày
+    httpOnly: true, // Chỉ cho phép cookie được truy cập bởi server
+    sameSite: "lax", // Cho phép gửi cookie giữa các tên miền
+    secure: process.env.NODE_ENV === "production" // true: web có https, false: web không có https
+  });
+
+  res.json({
+    code: "success",
+    message: "Đăng nhập thành công!",
+  });
+
+
 }
