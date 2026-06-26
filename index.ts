@@ -3,6 +3,7 @@ import cors from "cors"
 import routes  from "./router/index.route"
 import { connectDB } from './config/database.config';
 import dotenv from "dotenv"
+import cookieParser from 'cookie-parser';
 
 const app = express();
 const port = 4000;
@@ -20,6 +21,9 @@ app.use(cors({
 app.use(express.json())
 // Connect database
 connectDB();
+
+// Cho phép gửi cookie
+app.use(cookieParser())
 
 app.use('/', routes);
 
