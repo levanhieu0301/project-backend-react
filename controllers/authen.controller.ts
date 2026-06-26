@@ -47,7 +47,7 @@ export const authen = async (req: Request, res: Response) => {
       if(existAccountCompany){
         const infoCompany = {
           id: existAccountCompany.id,
-          fullName: existAccountCompany.companyName,
+          companyName: existAccountCompany.companyName,
           email: existAccountCompany.email
         };
 
