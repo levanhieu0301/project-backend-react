@@ -1,9 +1,10 @@
 import { Router } from "express";
 const router = Router();
-import * as userRegisterController from "../controllers/account-user.controller";
-import * as userRegisterValidate from "../validates/account-user.validate"
+import * as userController from "../controllers/account-user.controller";
+import * as userValidate from "../validates/account-user.validate"
 
-router.post('/register',userRegisterValidate.registerPost ,userRegisterController.userRegister);
+router.post('/register',userValidate.registerPost ,userController.userRegister);
+router.get('/logout' ,userController.userLogout);
 
-router.post('/login',userRegisterValidate.loginPost ,userRegisterController.userLogin);
+router.post('/login',userValidate.loginPost ,userController.userLogin);
 export default router;
