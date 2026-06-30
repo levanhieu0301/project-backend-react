@@ -28,7 +28,9 @@ export const authen = async (req: Request, res: Response) => {
       const infoUser = {
         id: existAccount.id,
         fullName: existAccount.fullName,
-        email: existAccount.email
+        email: existAccount.email,
+        avatar: existAccount.avatar,
+        phone: existAccount.phone
       };
 
       res.json({
