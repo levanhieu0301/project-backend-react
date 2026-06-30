@@ -1,0 +1,12 @@
+import { Router } from "express";
+const router = Router();
+import * as companyManageController from "../controllers/company-manage.controller"
+import * as authMiddleware from "../middlewares/auth.middleware"
+import multer from "multer";
+import {storage} from "../helpers/cloudinary.helper"
+const upload = multer({ storage: storage });
+
+router.get('/cities',companyManageController.cities);
+router.patch('/profile',authMiddleware.verifyTokenCompany,upload.single("avatar"),companyManageController.profile);
+
+export default router;

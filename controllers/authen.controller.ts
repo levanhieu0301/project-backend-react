@@ -50,7 +50,16 @@ export const authen = async (req: Request, res: Response) => {
         const infoCompany = {
           id: existAccountCompany.id,
           companyName: existAccountCompany.companyName,
-          email: existAccountCompany.email
+          email: existAccountCompany.email,
+          city: existAccountCompany.city,
+          address: existAccountCompany.address,
+          companyModel: existAccountCompany.companyModel,
+          companyEmployees: existAccountCompany.companyEmployees,
+          workingTime: existAccountCompany.workingTime,
+          workOverTime: existAccountCompany.workOverTime,
+          phone: existAccountCompany.phone,
+          description: existAccountCompany.description,
+          avatar: existAccountCompany.avatar,
         };
 
         res.json({
