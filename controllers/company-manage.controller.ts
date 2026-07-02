@@ -55,3 +55,32 @@ export const create = async (req: AccountRequest, res: Response) => {
     message: "Tạo công việc thành công!"
   })
 }
+
+export const list = async (req: AccountRequest, res: Response) => {
+  const jobs = await Job.find({
+    companyId: req.account.id,
+  })
+  const city = await City.findOne({
+  _id : req.account.city   
+  })
+  const dataFinal = []
+  for(const item of jobs){
+    dataFinal.push({
+      id: item.id,
+      companyLogo: req.account.avatar,
+      title: item.title,
+      companyName: req.account.companyName,
+      salaryMin: item.salaryMin,
+      salaryMax: item.salaryMax,
+      position: item.position,
+      workingForm: item.workingForm,
+      companyCity: city?.name,
+      technologies: item.technologies
+    })
+  }
+
+  res.json({
+    code: "success",
+    infoWork: dataFinal
+  })
+}

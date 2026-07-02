@@ -13,5 +13,8 @@ router.post(
   authMiddleware.verifyTokenCompany,
   upload.array("images", 8),
   companyManageController.create);
-
+router.post(
+  '/job/list',
+  authMiddleware.verifyTokenCompany,
+  companyManageController.list);
 export default router;
