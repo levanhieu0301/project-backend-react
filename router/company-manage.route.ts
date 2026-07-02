@@ -8,5 +8,10 @@ const upload = multer({ storage: storage });
 
 router.get('/cities',companyManageController.cities);
 router.patch('/profile',authMiddleware.verifyTokenCompany,upload.single("avatar"),companyManageController.profile);
+router.post(
+  '/job/create',
+  authMiddleware.verifyTokenCompany,
+  upload.array("images", 8),
+  companyManageController.create);
 
 export default router;
