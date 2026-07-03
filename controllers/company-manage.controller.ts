@@ -104,3 +104,61 @@ export const list = async (req: AccountRequest, res: Response) => {
     totalPages: totalPages
   })
 }
+export const edit = async (req: AccountRequest, res: Response) => {
+  try {
+    const jobs = await Job.findOne({
+      _id: req.params.id,
+      companyId: req.account.id
+    })
+    if(!jobs) {
+      return res.json({
+        code: "error",
+        message: "Công việc không tồn tại!"
+      })
+    }
+    res.json({
+      code: "success",
+      jobs: jobs
+    })
+  } catch (error) {
+    res.json({
+      code: "error",
+      message: "Đã xảy ra lỗi!"
+    })
+  }
+}
+
+export const editPatch = async (req: AccountRequest, res: Response) => {
+try {
+    const id = req.params.id;
+    req.body.salaryMin = req.body.salaryMin ? parseInt(req.body.salaryMin) : 0;
+    req.body.salaryMax = req.body.salaryMax ? parseInt(req.body.salaryMax) : 0;
+    req.body.technologies = req.body.technologies ? req.body.technologies.split(", ") : [];
+    req.body.images = [];
+
+    // Xử lý mảng images
+    if(req.files) {
+      for (const file of req.files as any[]) {
+        req.body.images.push(file.path);
+      }
+    }
+    // Hết Xử lý mảng images
+
+    await Job.updateOne({
+      _id: id,
+      companyId: req.account.id
+    }, req.body)
+
+    res.json({
+      code: "success",
+      message: "Cập nhật công việc thành công!"
+    })
+  } catch (error) {
+    console.log(error);
+    res.json({
+      code: "error",
+      message: "Id không hợp lệ!"
+    })
+  }
+}
+
