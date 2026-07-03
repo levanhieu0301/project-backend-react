@@ -57,9 +57,28 @@ export const create = async (req: AccountRequest, res: Response) => {
 }
 
 export const list = async (req: AccountRequest, res: Response) => {
-  const jobs = await Job.find({
-    companyId: req.account.id,
-  })
+  const find = {
+    companyId: req.account.id
+  }
+  let page = 1
+  const limitItem = 2;
+  if(req.query.page){
+    const currentPage = parseInt(`${req.query.page}`);
+    if(currentPage > 0){
+      page = currentPage;
+    }
+  }
+  const totalRecords = await Job.countDocuments(find)
+  const totalPages = Math.ceil(totalRecords / limitItem);
+  const skip = (page - 1) * limitItem;
+
+  const jobs = await Job
+    .find(find)
+    .limit(limitItem)
+    .skip(skip)
+    .sort({
+      createdAt: "desc"
+    })
   const city = await City.findOne({
   _id : req.account.city   
   })
@@ -81,6 +100,7 @@ export const list = async (req: AccountRequest, res: Response) => {
 
   res.json({
     code: "success",
-    infoWork: dataFinal
+    infoWork: dataFinal,
+    totalPages: totalPages
   })
 }
