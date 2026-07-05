@@ -26,4 +26,10 @@ router.patch(
   authMiddleware.verifyTokenCompany,
   upload.array("images", 8),
   companyManageController.editPatch);
+
+router.delete(
+  '/job/delete/:id',
+  authMiddleware.verifyTokenCompany,
+  companyManageController.deleteJob
+);
 export default router;

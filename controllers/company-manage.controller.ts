@@ -161,4 +161,31 @@ try {
     })
   }
 }
-
+export const deleteJob = async (req: AccountRequest, res: Response) => {
+  try {
+  const id = req.params.id;
+  const existJob = await Job.findOne({
+    _id: id,
+    companyId: req.account.id
+  })
+  if(!existJob) {
+    return res.json({
+      code: "error",
+      message: "Công việc không tồn tại!"
+    })
+  }
+  await Job.deleteOne({
+    _id: id,
+    companyId: req.account.id
+  })
+  res.json({
+    code: "success",
+    message: "Xóa công việc thành công!"
+  })
+  } catch (error) {
+    res.json({
+      code: "error",
+      message: "Đã xảy ra lỗi!"
+    })
+  }
+}
