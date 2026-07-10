@@ -6,16 +6,35 @@ import Job from '../models/job.model';
 export const language = async (req: Request, res: Response) => {
 
   const dataFinal = []
+  console.log(req.query.language)
+  console.log(req.query.city)
+
   if(Object.keys(req.query).length > 0) {
-    const find: any = {}
+    const find: any = {
+    }
     if(req.query.language) {
       find.technologies = req.query.language
     }
-     const jobs = await Job
-      .find(find)
-      .sort({
-        createdAt: "desc"
+
+
+    if(req.query.city) {
+      const city = await City.findOne({
+        name: `${req.query.city}`
       })
+      if(city){
+        const listCompany = await AccountCompany.find({
+          city: city.id
+        })
+        const listCompanyId = listCompany.map((item) => item.id)
+        find.companyId = { $in: listCompanyId }
+      }
+    }
+
+    const jobs = await Job
+    .find(find)
+    .sort({
+      createdAt: "desc"
+    })
 
     for (const item of jobs) {
       const itemFinal = {
