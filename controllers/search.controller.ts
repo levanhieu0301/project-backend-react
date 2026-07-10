@@ -29,6 +29,14 @@ export const language = async (req: Request, res: Response) => {
         find.companyId = { $in: listCompanyId }
       }
     }
+    
+
+    if(req.query.company) {
+      const accountCompany = await AccountCompany.findOne({
+        companyName: req.query.company as string
+      })
+      find.companyId = accountCompany?.id;
+    }
 
     const jobs = await Job
     .find(find)
