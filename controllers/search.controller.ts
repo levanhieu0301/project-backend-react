@@ -37,6 +37,11 @@ export const language = async (req: Request, res: Response) => {
       })
       find.companyId = accountCompany?.id;
     }
+    if(req.query.keyword) {
+      const keywordRegex = new RegExp(`${req.query.keyword}`, "i");
+      find.title = keywordRegex;
+    }
+
 
     const jobs = await Job
     .find(find)
