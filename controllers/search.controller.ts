@@ -41,7 +41,10 @@ export const language = async (req: Request, res: Response) => {
       const keywordRegex = new RegExp(`${req.query.keyword}`, "i");
       find.title = keywordRegex;
     }
-
+    
+    if(req.query.position) {
+      find.position = req.query.position;
+    }
 
     const jobs = await Job
     .find(find)
