@@ -4,7 +4,7 @@ import City from '../models/cities.model';
 import Job from '../models/job.model';
 
 export const language = async (req: Request, res: Response) => {
-
+    let totalPage = 1;
   const dataFinal = []
   console.log(req.query.language)
   console.log(req.query.city)
@@ -48,12 +48,31 @@ export const language = async (req: Request, res: Response) => {
     if(req.query.workingForm) {
       find.workingForm = req.query.workingForm;
     }
+    // Phân trang
+    const limitItems = 2;
+    let page = 1;
+    if(req.query.page) {
+      const currentPage = parseInt(`${req.query.page}`);
+      if(currentPage > 0) {
+        page = currentPage;
+      }
+    }
+    const totalRecord = await Job.countDocuments(find);
+    totalPage = Math.ceil(totalRecord/limitItems);
+    if(page > totalPage) {
+      page = 1;
+    }
+    const skip = (page - 1) * limitItems;
+    // Hết Phân trang
+
 
     const jobs = await Job
     .find(find)
     .sort({
       createdAt: "desc"
     })
+    .limit(limitItems)
+    .skip(skip);
 
     for (const item of jobs) {
       const itemFinal = {
@@ -91,6 +110,7 @@ export const language = async (req: Request, res: Response) => {
   res.json({
     code: "success",
     message: `Language is ${language}`,
-    jobs: dataFinal
+    jobs: dataFinal,
+    totalPage: totalPage
   })
 };
