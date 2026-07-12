@@ -45,6 +45,9 @@ export const language = async (req: Request, res: Response) => {
     if(req.query.position) {
       find.position = req.query.position;
     }
+    if(req.query.workingForm) {
+      find.workingForm = req.query.workingForm;
+    }
 
     const jobs = await Job
     .find(find)
