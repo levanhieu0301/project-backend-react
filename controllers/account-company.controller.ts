@@ -85,13 +85,26 @@ export const companyLogin = async (req: Request, res: Response) => {
   
 }
 export const list = async (req: Request, res: Response) => {
-  let limitCompany = 12;
+  let limitItems = 9;
   if(req.query.limitItems) {
-    limitCompany = parseInt(`${req.query.limitItems}`);
+    limitItems = parseInt(`${req.query.limitItems}`);
   }
+  let page = 1;
+  if(req.query.page) {
+    const currentPage = parseInt(`${req.query.page}`);
+    if(currentPage > 0) {
+      page = currentPage;
+    }
+  }
+  const totalRecord = await Job.countDocuments({});
+  const totalPage = Math.ceil(totalRecord/limitItems);
+  const skip = (page - 1) * limitItems;
+  // Hết Phân trang
+
   const companyList = await AccountCompany
     .find({})
-    .limit(limitCompany)
+    .limit(limitItems)
+    .skip(skip);
   const dataFinal = [];
   for(const company of companyList) {
     const dataItemFinal = {
@@ -121,6 +134,7 @@ export const list = async (req: Request, res: Response) => {
 
   res.json({
     code: "success",
-    companyList: dataFinal
+    companyList: dataFinal,
+    totalPage: totalPage
   });
 }
