@@ -11,4 +11,10 @@ router.post('/register',userValidate.registerPost ,userController.userRegister);
 router.get('/logout' ,userController.userLogout);
 router.post('/login',userValidate.loginPost ,userController.userLogin);
 router.patch('/profile',authMiddleware.verifyTokenUser,upload.single('avatar'), userController.profile)
+router.get(
+  '/cv/list', 
+  authMiddleware.verifyTokenUser,
+  userController.listCV
+);
+
 export default router;

@@ -3,6 +3,9 @@ import AccountUser from '../models/account-user.model';
 import bcrypt from "bcryptjs"
 import jwt from "jsonwebtoken";
 import { AccountRequest } from '../interfaces/request.interface';
+import CV from '../models/cv.model';
+import Job from '../models/job.model';
+import AccountCompany from '../models/account-company.model';
 
 export const userRegister = async (req: Request, res: Response) => {
 const { fullName, email, password } = req.body;
@@ -113,3 +116,58 @@ export const profile = async (req: AccountRequest, res: Response) => {
   });
 }
 
+export const listCV = async (req: AccountRequest, res: Response) => {
+  const userEmail = req.account.email;
+  console.log(userEmail)
+  
+  const listCV = await CV
+    .find({
+      email: userEmail
+    })
+    .sort({
+      createdAt: "desc"
+    });
+
+  const dataFinal = [];
+
+  for (const item of listCV) {
+    const dataItemFinal = {
+      id: item.id,
+      jobTitle: "",
+      companyName: "",
+      jobSalaryMin: 0,
+      jobSalaryMax: 0,
+      jobPosition: "",
+      jobWorkingForm: "",
+      status: item.status
+    };
+
+    const infoJob = await Job.findOne({
+      _id: item.jobId
+    })
+
+    if(infoJob) {
+      dataItemFinal.jobTitle = `${infoJob.title}`;
+      dataItemFinal.jobSalaryMin = parseInt(`${infoJob.salaryMin}`);
+      dataItemFinal.jobSalaryMax = parseInt(`${infoJob.salaryMax}`);
+      dataItemFinal.jobPosition = `${infoJob.position}`;
+      dataItemFinal.jobWorkingForm = `${infoJob.workingForm}`;
+
+      const infoCompany = await AccountCompany.findOne({
+        _id: infoJob.companyId
+      })
+
+      if(infoCompany) {
+        dataItemFinal.companyName = `${infoCompany.companyName}`;
+      }
+    }
+
+    dataFinal.push(dataItemFinal);
+  }
+
+  res.json({
+    code: "success",
+    message: "Lấy danh sách CV thành công!",
+    listCV: dataFinal
+  })
+}
