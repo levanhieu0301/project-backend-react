@@ -44,4 +44,10 @@ router.get(
   authMiddleware.verifyTokenCompany,
   companyManageController.cvDetail
 );
+
+router.patch(
+  '/cv/change-status', 
+  authMiddleware.verifyTokenCompany,
+  companyManageController.changeStatusPatch
+);
 export default router;
