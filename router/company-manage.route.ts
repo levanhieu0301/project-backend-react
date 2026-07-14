@@ -32,4 +32,10 @@ router.delete(
   authMiddleware.verifyTokenCompany,
   companyManageController.deleteJob
 );
+
+router.get(
+  '/cv/list',
+  authMiddleware.verifyTokenCompany,
+  companyManageController.cvList
+);
 export default router;
