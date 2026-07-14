@@ -38,4 +38,10 @@ router.get(
   authMiddleware.verifyTokenCompany,
   companyManageController.cvList
 );
+
+router.get(
+  '/cv/detail/:id',
+  authMiddleware.verifyTokenCompany,
+  companyManageController.cvDetail
+);
 export default router;
