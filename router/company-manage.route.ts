@@ -33,6 +33,7 @@ router.delete(
   companyManageController.deleteJob
 );
 
+
 router.get(
   '/cv/list',
   authMiddleware.verifyTokenCompany,
@@ -50,4 +51,10 @@ router.patch(
   authMiddleware.verifyTokenCompany,
   companyManageController.changeStatusPatch
 );
+router.delete(
+  '/cv/delete/:id', 
+  authMiddleware.verifyTokenCompany,
+  companyManageController.deleteCVDel
+);
+
 export default router;
