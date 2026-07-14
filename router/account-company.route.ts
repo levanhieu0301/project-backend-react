@@ -7,5 +7,6 @@ router.post('/register',companyValidate.registerPost ,companyController.companyR
 router.post('/login',companyValidate.loginPost ,companyController.companyLogin);
 
 router.get('/list', companyController.list);
+router.get('/detail/:id', companyController.companyDetail);
 
 export default router;
