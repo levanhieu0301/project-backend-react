@@ -4,19 +4,21 @@ import routes  from "./router/index.route"
 import { connectDB } from './config/database.config';
 import dotenv from "dotenv"
 import cookieParser from 'cookie-parser';
-
-const app = express();
-const port = 4000;
 // Load biến môi trường 
 dotenv.config();
 
+const app = express();
+const port = process.env.PORT || 4000;
+
 // Cấu hình CORS
-app.use(cors({
-  origin: "http://localhost:3000", // Có thể điền 1 tên miền cụ thể
-  methods: ["GET", "POST", "PATCH", "DELETE"], // Các phương thức được phép
-  allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: true, // Cho phép gửi cookie
-}));
+app.use(
+  cors({
+    origin: process.env.CLIENT_URL,// Có thể điền 1 tên miền cụ thể
+    methods: ["GET", "POST", "PATCH", "DELETE"], // Các phương thức được phép
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,// Cho phép gửi cookie
+  })
+);
 // Cho phép gửi lên dạng JSON
 app.use(express.json())
 // Connect database
